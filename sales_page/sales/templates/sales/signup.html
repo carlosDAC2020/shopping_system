@@ -1,0 +1,12 @@
+<h1>registrate</h1>
+
+{{mensaje}}
+
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="registrate">
+</form>
+
+
+
