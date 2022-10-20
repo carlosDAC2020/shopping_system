@@ -26,7 +26,7 @@ class Product(models.Model):# tabla productos
 class Sale(models.Model):# tabla ventas
     # columna             # tpos de datos 
     id_invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
-    id_product = models.ForeignKey(product, on_delete=models.CASCADE)
+    id_product = models.ForeignKey(Product, on_delete=models.CASCADE)
     units_product = models.IntegerField(default=0)
     worth_sale = models.IntegerField(default=0)
 
