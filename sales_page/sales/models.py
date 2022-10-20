@@ -3,15 +3,13 @@ from itertools import product
 from django.db import models
 from django.contrib.auth.models import User
 
-class Invoice(models.Model):# tabla recivos
-    # columna             # tpos de datos 
-    id_client = models.ForeignKey(User, on_delete=models.CASCADE)
-    worth_invoice = models.IntegerField(default=0)
-    date_invoice = models.DateTimeField(" date invoice ")
-    status_payment = models.BooleanField(default=False)
-    
-    #def __str__(self):
-    #    return self.date_invoice
+class Client(User):
+    phone = models.IntegerField(default=0)
+    balance = models.IntegerField(default=50000)
+
+    def __str__(self):
+        return self.first_name 
+
 
 
 class Product(models.Model):# tabla productos 
@@ -22,6 +20,18 @@ class Product(models.Model):# tabla productos
     
     def __str__(self):
         return self.name 
+
+
+class Invoice(models.Model):# tabla recivos
+    # columna             # tpos de datos 
+    id_client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    worth_invoice = models.IntegerField(default=0)
+    date_invoice = models.DateTimeField(" date invoice ")
+    status_payment = models.BooleanField(default=False)
+    
+    #def __str__(self):
+    #    return self.date_invoice
+
 
 class Sale(models.Model):# tabla ventas
     # columna             # tpos de datos 

@@ -1,31 +1,36 @@
-from django.shortcuts import render, HttpResponse, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
+from .models import Client, Invoice, Sale
 
 def index(request):
     return render(request, "sales/index.html")  
 
 def signup(request):
     if request.method=="GET":
-        return render(request,"sales/signup.html",{
-            "form":UserCreationForm
-        })
+        return render(request,"sales/signup.html")
     else:
+        # verificamos que las contraseñas coincidan
         if request.POST["password1"] == request.POST["password2"]:
             try:
-                user = User.objects.create_user(username=request.POST["username"], password=request.POST["password1"])
+                # registramos el usuario nuevo 
+                user = Client.objects.create_user(
+                first_name=request.POST["first_name"],
+                last_name=request.POST["last_name"],
+                email=request.POST["email"],
+                phone=request.POST["phone"],
+                username=request.POST["username"], 
+                password=request.POST["password1"])
                 user.save()
+                # le damos un login automantico al usuario
                 login(request,user)
                 return redirect("sales:home")
+            # en caso de que el usuario ya este registrado elevamos el error de integridad 
             except IntegrityError: 
                 return render(request,"sales/signup.html",{
-                    "form":UserCreationForm,
                     "mensaje":"usuario ya existente "
                 })
         return render(request,"sales/signup.html",{
-            "form":UserCreationForm,
             "mensaje":"las contraseñas no coinciden "
         })
 
@@ -38,9 +43,7 @@ def end_sesion(request):
 
 def signin(request):
     if request.method=="GET":
-        return render(request,"sales/signin.html",{
-            "form":AuthenticationForm
-        })
+        return render(request,"sales/signin.html")
     else:
         user = authenticate(
             request, 
@@ -48,7 +51,6 @@ def signin(request):
             password = request.POST["password"])
         if user == None:
             return render(request,"sales/signin.html",{
-            "form":AuthenticationForm,
             "mensaje":" usuario o contraseña incorrectos"
         })
         else:
