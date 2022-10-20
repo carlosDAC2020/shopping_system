@@ -20,8 +20,8 @@ class Product(models.Model):# tabla productos
     units_available = models.IntegerField(default=0)
     worth_unit = models.IntegerField(default=0)
     
-    #def __str__(self):
-    #    return self.name 
+    def __str__(self):
+        return self.name 
 
 class Sale(models.Model):# tabla ventas
     # columna             # tpos de datos 
