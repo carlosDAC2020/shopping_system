@@ -17,6 +17,7 @@ class Product(models.Model):# tabla productos
     name = models.CharField(max_length=20)
     units_available = models.IntegerField(default=0)
     worth_unit = models.IntegerField(default=0)
+    photo_product = models.ImageField(upload_to='media/images/', default="media/images/")
     
     def __str__(self):
         return self.name 
