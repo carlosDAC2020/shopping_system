@@ -1,10 +1,14 @@
+from itertools import product
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .models import Client, Invoice, Sale
+from .models import Client, Invoice, Sale, Product
 
 def index(request):
-    return render(request, "sales/index.html")  
+    products = Product.objects.all()
+    return render(request, "sales/index.html",{
+        "products":products
+    })  
 
 def signup(request):
     if request.method=="GET":
