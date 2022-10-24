@@ -38,8 +38,11 @@ def signup(request):
             "mensaje":"las contraseñas no coinciden "
         })
 
-def home(request):
-    return render(request,"sales/home.html")
+def home(request, ):
+    products = Product.objects.all()
+    return render(request,"sales/home.html",{
+        "products":products
+    })
 
 def end_sesion(request):
     logout(request)
