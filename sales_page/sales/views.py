@@ -1,8 +1,10 @@
-from itertools import product
-from django.shortcuts import render, redirect
+
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .models import Client, Invoice, Sale, Product
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     products = Product.objects.all()
@@ -38,15 +40,6 @@ def signup(request):
             "mensaje":"las contraseñas no coinciden "
         })
 
-def home(request, ):
-    products = Product.objects.all()
-    return render(request,"sales/home.html",{
-        "products":products
-    })
-
-def end_sesion(request):
-    logout(request)
-    return redirect("sales:index")
 
 def signin(request):
     if request.method=="GET":
@@ -63,3 +56,47 @@ def signin(request):
         else:
             login(request,user)
             return redirect("sales:home")
+
+
+@login_required
+def home(request, ):
+    products = Product.objects.all()
+    return render(request,"sales/home.html",{
+        "products":products
+    })
+
+
+@login_required
+def end_sesion(request):
+    logout(request)
+    return redirect("sales:index")
+
+
+@login_required
+def add_sales(request,product_id):
+    # traemos la ultima factura regiatrada 
+    invoice_most_recently = Invoice.objects.order_by("-date_invoice")[:1]
+     # seleccionamos el producto a comprar
+    product = Product.objects.get(pk=product_id)
+
+    # en caso de que la ultima factura se haya registrado en los ultimos 30 minutos y su estado de pogo sea falso
+    # se añadira la venta correspondiente a dicha factura 
+    if invoice_most_recently[0].invoice_most_recently():
+        # craemos la venta y la asociamos  con la factura creada anteriormente 
+        new_sale = Sale.objects.create(id_invoice=invoice_most_recently[0], id_product=product)
+        new_sale.save()
+    
+    
+    else:
+        # creamos la factura
+        new_invoice = Invoice.objects.create(date_invoice=timezone.now(), id_client=request.user)
+        # guardamos la factura
+        new_invoice.save()
+        # añadimos la venta a una nueva factura
+        new_sale = Sale.objects.create(id_invoice=new_invoice, id_product=product)
+        new_sale.save()
+   
+    return redirect("sales:home")
+
+
+

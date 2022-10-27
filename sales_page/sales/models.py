@@ -1,15 +1,20 @@
+import datetime
+
 from email.policy import default
-from itertools import product
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 class Client(User):
     phone = models.IntegerField(default=0)
     balance = models.IntegerField(default=50000)
 
     def __str__(self):
-        return self.first_name 
-
+        return self.username
+    
+    def balance_print(self):
+        return str(self.balance)
 
 
 class Product(models.Model):# tabla productos 
@@ -25,13 +30,16 @@ class Product(models.Model):# tabla productos
 
 class Invoice(models.Model):# tabla recivos
     # columna             # tpos de datos 
-    id_client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    id_client = models.ForeignKey(User, on_delete=models.CASCADE)
     worth_invoice = models.IntegerField(default=0)
     date_invoice = models.DateTimeField(" date invoice ")
     status_payment = models.BooleanField(default=False)
     
-    #def __str__(self):
-    #    return self.date_invoice
+    def __str__(self):
+        return str(self.pk)
+
+    def invoice_most_recently(self):
+        return self.date_invoice >= timezone.now() - datetime.timedelta(minutes=30) and self.status_payment==False
 
 
 class Sale(models.Model):# tabla ventas
@@ -41,5 +49,5 @@ class Sale(models.Model):# tabla ventas
     units_product = models.IntegerField(default=0)
     worth_sale = models.IntegerField(default=0)
 
-    #def __str__(self):
-    #    return self.id
+    def __str__(self):
+        return str(self.pk)

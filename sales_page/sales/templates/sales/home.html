@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{% static 'sales/style.css' %}"
+    <link rel="stylesheet" href="{% static 'sales/style.css' %}">
     <title>Home</title>
 </head>
 <body>
@@ -26,9 +26,9 @@
         <div class="row align-items-md-stretch">
       <div class="col-md-6">
         <div class="h-100 p-5 bg-light rounded-3">
-          <h1>Welcome Username</h1>
-          <h2>First_name Last_name</h2>
-          <h1>50.000 $</h1>
+          <h1>Welcome {{user.username}}</h1>
+          <h2>{{user.first_name}} {{user.last_name}}</h2>
+          <h1>{{user.phone}}</h1>
         </div>
       </div>
       <div class="col-md-6 ">
@@ -63,7 +63,7 @@
             <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">{{product.name}}</h3>
             <ul class="d-flex list-unstyled mt-auto">
               <li class="me-auto">
-                <button type="button" class="btn btn-success  "><i class="bi bi-cart-plus"></i> Add</button>
+                <a href="{% url 'sales:add_sales' product.id %}"><button type="button" class="btn btn-success  "><i class="bi bi-cart-plus"></i> Add</button></a>
               </li>
               <li class="d-flex align-items-center me-3">
                 <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"/></svg>

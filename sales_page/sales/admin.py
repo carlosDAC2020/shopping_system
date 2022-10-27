@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Invoice, Product, Client
+from .models import Invoice, Product, Client, Sale
 
 class ClientAdmin(admin.ModelAdmin):
     fields=["first_name","last_name","username","password","email","phone","balance"]
@@ -9,7 +9,23 @@ class ClientAdmin(admin.ModelAdmin):
 
 admin.site.register(Client, ClientAdmin)
 
-admin.site.register(Invoice)
+#---------------------------------------------------------------------------------------
 
-admin.site.register(Product)
+class InvoiceAdmin(admin.ModelAdmin):
+    list_display=["pk","worth_invoice","date_invoice","status_payment"]
+    list_filter=["date_invoice"]
 
+admin.site.register(Invoice, InvoiceAdmin)
+
+#---------------------------------------------------------------------------------------
+
+class ProductAdmin(admin.ModelAdmin):
+    list_display=["pk","name","units_available","worth_unit"]
+
+admin.site.register(Product, ProductAdmin)
+
+#---------------------------------------------------------------------------------------
+class SaleAdmin(admin.ModelAdmin):
+    list_display=["pk","id_invoice","id_product","units_product","worth_sale"]
+
+admin.site.register(Sale, SaleAdmin)
