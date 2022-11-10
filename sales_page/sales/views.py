@@ -1,6 +1,5 @@
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .models import Client, Invoice, Sale, Product
@@ -63,9 +62,13 @@ def signin(request):
 def home(request, ):
     products = Product.objects.all()
     user=Client.objects.get(pk=request.user.pk) 
+    balance=(user.balance)
+    balance="{:,.2f}".format(balance)
+    print(balance)
     return render(request,"sales/home.html",{
         "products":products,
-        "Client":user
+        "Client":user,
+        "blc":balance
     })
 
 
@@ -101,6 +104,15 @@ def add_sales(request,product_id):
         new_sale.save()
     
     return redirect("sales:home")
+@login_required
+def delete_sales(request, id_sale):
+    sale=Sale.objects.get(pk=id_sale)
+    if len(Sale.objects.filter(id_invoice=sale.id_invoice))>0:
+        sale.delete()
+        if len(Sale.objects.filter(id_invoice=sale.id_invoice))==0:
+            inv=Invoice.objects.get(pk=sale.id_invoice.pk)
+            inv.delete()
+    return redirect("sales:shopping_cart")
 
 @login_required
 def shopping_cart(request):
@@ -160,6 +172,13 @@ def pay(request):
         # actualizamos el balance del usuario restandole el valor de la factura 
         user_pay.balance-=inv.worth_invoice
         user_pay.save()
+
+        # restamos las unidades disponibles de los productos 
+        for sale in sales_recently:
+            product=Product.objects.get(pk=int(sale.id_product.pk))
+            product.units_available-=sale.units_product
+            product.save()
+            
         return render(request, "sales/invoice_detail.html", {
         "sales_recently":sales_recently,
         "invoice":inv
