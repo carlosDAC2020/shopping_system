@@ -1,0 +1,112 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'sales/style.css' %}">
+    <title>signin</title>
+    <link href="signin.css" rel="stylesheet">
+</head>
+<body class="text-center">
+    
+      <div class="modal modal-signin position-static d-block bg-secondary py-5" tabindex="-1" role="dialog" id="modalSignin">
+        <div class="modal-dialog" role="document">
+          
+        </div>
+
+
+        <div class="container px-4 py-5" id="custom-cards">
+          <div class="row row-cols-1 row-cols-lg-2 align-items-stretch g-4 py-5">
+  
+            <div class="col">
+              <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                  <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+                  <h1 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-primary">Your cart</span>
+                  </h1>
+                </div>
+                {% if  mensaje%}
+                  <div class="modal-body p-5 pt-0">
+                    <h4 class="text-bold">{{mensaje}}</h4>
+                    <div class="d-grid gap-3 d-md-flex justify-center mb-4 mb-lg-3">
+                      <a href="{% url 'sales:home' %}"><button type="button" class="btn btn-outline-secondary btn-lg px-4">Back Home</button></a>
+                  </div>
+                  </div>
+                {% else %}
+    
+                <div class="modal-body p-5 pt-0">
+                  <form action="{% url 'sales:pay' %}"  method="post">
+                      {% csrf_token %}
+    
+                      
+                      <ul class="list-group mb-3">
+    
+                          {% for sale in sales_recently %}
+                              
+                              <li class="list-group-item d-flex justify-content-between lh-sm">
+                                  <div>
+                                  <h6 class="my-0">{{sale.id_product}}</h6>
+                                  <small class="text-muted">{{sale.id_product.worth_unit}} for Unit</small>
+                                  </div>
+                                  <span class="text-muted"><input type="number" placeholder="Units to buy" name="{{sale.id_product}}" id="" required></span>
+                              </li>
+    
+                          {% endfor %} 
+                      </ul>
+                      <div class="d-grid gap-3 d-md-flex justify-center mb-4 mb-lg-3">
+                          <a href="{% url 'sales:signin' %}"><button type="submit" class="btn btn-primary btn-lg px-4 me-md-2 fw-bold">Pay</button></a>
+                          <a href="{% url 'sales:home' %}"><button type="button" class="btn btn-outline-secondary btn-lg px-4">Back</button></a>
+                      </div>
+                  </form>
+              </div>
+                {% endif %}
+              </div>
+            </div>
+      
+            <div class="col">
+
+              <div class="modal-content rounded-4 shadow">
+                <div class="modal-header p-5 pb-4 border-bottom-0">
+                  <!-- <h1 class="modal-title fs-5" >Modal title</h1> -->
+                  <h1 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-primary">Recent Invoices</span>
+                  </h1>
+                </div>
+                
+                <div class="modal-body p-5 pt-0">
+                      {% csrf_token %}
+                      <ul class="list-group mb-3">
+                          {% for invoice in invoice_most_recently %}
+                          <li class="list-group-item d-flex justify-content-between text-success">
+                            <a href="{% url 'sales:invoice_detai' invoice.id %}"><i class="bi bi-receipt-cutoff"></i></a>
+                              <span>{{invoice.date_invoice}}</span>
+                              <strong>{{invoice.worth_invoice}}$</strong>
+                          </li>
+                          {% endfor %} 
+                      </ul>
+              </div>
+              </div>
+
+            </div>
+          </div>
+            
+          </div>
+        </div>
+
+
+      </div>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+
+

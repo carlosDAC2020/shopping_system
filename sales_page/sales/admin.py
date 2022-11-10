@@ -12,7 +12,7 @@ admin.site.register(Client, ClientAdmin)
 #---------------------------------------------------------------------------------------
 
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display=["pk","worth_invoice","date_invoice","status_payment"]
+    list_display=["pk","id_client","worth_invoice","date_invoice","status_payment"]
     list_filter=["date_invoice"]
 
 admin.site.register(Invoice, InvoiceAdmin)

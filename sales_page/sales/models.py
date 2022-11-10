@@ -40,7 +40,7 @@ class Invoice(models.Model):# tabla recivos
 
     def invoice_most_recently(self):
         return self.date_invoice >= timezone.now() - datetime.timedelta(minutes=30) and self.status_payment==False
-
+        
 
 class Sale(models.Model):# tabla ventas
     # columna             # tpos de datos 
