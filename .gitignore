@@ -1,4 +1,4 @@
 venv/
 notas.txt
-__pycache__
-sales_page/sales_page/db.sqlite3
+sales_page\sales_page\__pycache__
+C:\Users\HP\Desktop\shopping_system\sales_page\db.sqlite3
